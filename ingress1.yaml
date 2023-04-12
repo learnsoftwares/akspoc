@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: petclinic-ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "5s"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "10s"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60s"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "10m"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+    - host: <your-hostname>
+      http:
+        paths:
+          - path: /config(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: config-server
+              servicePort: 8888
+          - path: /discovery(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: discovery-server
+              servicePort: 8761
+          - path: /customers(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: customers-service
+              servicePort: 8081
+          - path: /visits(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: visits-service
+              servicePort: 8082
+          - path: /vets(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: vets-service
+              servicePort: 8083
+          - path: /api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              serviceName: api-gateway
+              servicePort: 8080
