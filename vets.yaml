@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vets-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vets-service
+  template:
+    metadata:
+      labels:
+        app: vets-service
+    spec:
+      containers:
+        - name: vets-service
+          image: bryannoland/spring-petclinic-vets-service
+          env:
+          - name: "SPRING_PROFILES_ACTIVE"
+            value: "docker"
+          ports:
+            - containerPort: 8083
+          command: ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
+          # Uncomment below line if you have wait-for-it.sh in your local directory
+          # volumeMounts:
+          # - name: wait-for-it
+          #   mountPath: /usr/src/app/wait-for-it.sh
+          # Uncomment below section if you have wait-for-it.sh in your local directory
+          # volumes:
+          #  - name: wait-for-it
+          #    configMap:
+          #      name: wait-for-it
+---

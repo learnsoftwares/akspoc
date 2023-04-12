@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  rules:
+    - host: coxakspoc.local # Replace with your own domain name
+      http:
+        paths:
+          - path: /api/customers/**
+            pathType: Prefix
+            backend:
+              service:
+                name: customers-service
+                port:
+                  number: 8081
+          - path: /api/visits/**
+            pathType: Prefix
+            backend:
+              service:
+                name: visits-service
+                port:
+                  number: 8082
+          - path: /api/vets/**
+            pathType: Prefix
+            backend:
+              service:
+                name: vets-service
+                port:
+                  number: 8083
+          - path: /api/**
+            pathType: Prefix
+            backend:
+              service:
+                name: api-gateway
+                port:
+                  number: 8080
