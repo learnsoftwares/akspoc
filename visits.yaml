@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visits-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visits-service
+  template:
+    metadata:
+      labels:
+        app: visits-service
+    spec:
+      containers:
+      - name: visits-service
+        image: bryannoland/spring-petclinic-visits-service
+        ports:
+        - containerPort: 8082
+        command: ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
